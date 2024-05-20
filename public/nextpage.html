@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Next Page</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+    <div id="content_container">
+        <h2>Welcome to Next Page!</h2>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script>
+        
+        var firebaseConfig = {
+            apiKey: "AIzaSyCln549ZtTDT7at2JmsxjCME0lE7wBaxnI",
+            authDomain: "fooddel-91210.firebaseapp.com",
+            databaseURL: "https://fooddel-91210-default-rtdb.firebaseio.com",
+            projectId: "fooddel-91210",
+            storageBucket: "fooddel-91210.appspot.com",
+            messagingSenderId: "239022305728",
+            appId: "1:239022305728:web:9f6a1aa5f3fa99f1831825"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        function logout() {
+            auth.signOut().then(() => {
+                alert('User Logged Out!');
+                window.location.href = "auth.html"; // Redirect to login page or another appropriate page
+            }).catch((error) => {
+                console.error('Logout Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

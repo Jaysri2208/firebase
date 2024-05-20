@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+    <div id="content_container">
+        <div id="form_container">
+            <div id="form_header_container">
+                <h2 id="form_header">My application</h2> 
+            </div>
+            <div id="form_content_container">
+                <div id="button_container">
+                    <h2 id="form_header">Upload Photo</h2> 
+                    <input type="file" id="photo_input">
+                    <button onclick="uploadPhoto()">Upload Photo</button>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyCln549ZtTDT7at2JmsxjCME0lE7wBaxnI",
+            authDomain: "fooddel-91210.firebaseapp.com",
+            databaseURL: "https://fooddel-91210-default-rtdb.firebaseio.com",
+            projectId: "fooddel-91210",
+            storageBucket: "fooddel-91210.appspot.com",
+            messagingSenderId: "239022305728",
+            appId: "1:239022305728:web:9f6a1aa5f3fa99f1831825"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        function uploadPhoto() {
+            var fileInput = document.getElementById('photo_input');
+            var file = fileInput.files[0];
+
+            if (file) {
+                var user = auth.currentUser;
+                if (user) {
+                    var userId = user.uid; 
+                    var storageRef = firebase.storage().ref('user_photos/' + userId + '/' + file.name);
+
+                    storageRef.put(file).then(function(snapshot) {
+                        console.log('Uploaded a file!');
+                        snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                            console.log('File available at', downloadURL);
+                            var userData = {
+                                photoURL: downloadURL
+                            };
+                            updateUserInDatabase(userId, userData);
+                        });
+                    }).catch(function(error) {
+                        console.error('Upload failed:', error);
+                    });
+                } else {
+                    console.log('No user is signed in.');
+                }
+            } else {
+                console.log('No file selected.');
+            }
+        }
+
+        function updateUserInDatabase(userId, userData) {
+            database.ref('users/' + userId).update(userData).then(function() {
+                console.log('User data updated successfully.');
+            }).catch(function(error) {
+                console.error('Error updating user data:', error);
+            });
+        }
+    </script>
+</body>
+</html>
